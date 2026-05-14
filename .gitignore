@@ -1,0 +1,8 @@
+.DS_Store
+build/
+dist/
+.judge-cache/
+.uv-cache/
+__pycache__/
+*.pyc
+*.egg-info/
