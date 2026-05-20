@@ -1,0 +1,93 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          441323200312060636
+          1
+          441323
+      - name: sample-2
+        type: fixed
+        content: |
+          62012319240507058X
+          1
+          620123
+  hidden:
+    cases:
+      # Random Generator
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 50
+                step: 7
+          item:
+            name: "hidden-random-${i:02d}"
+            type: generator
+            seed: 1
+            args:
+              minN: 1
+              maxN: "${i}"
+              mode: "random"
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 5
+          item:
+            name: "hidden-male-${i:02d}"
+            type: generator
+            seed: 1
+            args:
+              minN: 1
+              maxN: 50
+              mode: "no_random"
+              male: 1
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 5
+          item:
+            name: "hidden-female-${i:02d}"
+            type: generator
+            seed: 1
+            args:
+              minN: 1
+              maxN: 50
+              mode: "no_random"
+              male: 0
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 3
+          item:
+            name: "hidden-edgecase1-male-${i:02d}"
+            type: generator
+            seed: 1
+            args:
+              minN: 1
+              maxN: 50
+              mode: "edgecase1"
+              male: 0
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 3
+          item:
+            name: "hidden-edgecase1-female-${i:02d}"
+            type: generator
+            seed: 1
+            args:
+              minN: 1
+              maxN: 50
+              mode: "edgecase1"
+              male: 1

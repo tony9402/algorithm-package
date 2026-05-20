@@ -1,0 +1,104 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          7 3
+          2 0 0 0 1 1 0
+          0 0 1 0 1 2 0
+          0 1 1 0 1 0 0
+          0 1 0 0 0 0 0
+          0 0 0 2 0 0 0
+          0 1 0 0 0 0 0
+          2 1 0 0 0 0 2
+      - name: sample-2
+        type: fixed
+        content: |
+          7 3
+          2 0 0 0 1 1 0
+          0 0 1 0 1 2 0
+          0 1 1 2 1 0 0
+          2 1 0 0 0 0 2
+          0 0 0 2 0 1 1
+          0 1 0 0 0 0 0
+          2 1 0 0 2 0 2
+      - name: sample-3
+        type: fixed
+        content: |
+          7 4
+          2 0 2 0 1 1 0
+          0 0 1 0 1 2 0
+          0 1 1 2 1 0 0
+          2 1 0 0 0 0 2
+          0 0 0 2 0 1 1
+          0 1 0 0 0 0 0
+          2 1 0 0 2 0 2
+      - name: sample-4
+        type: fixed
+        content: |
+          7 5
+          2 0 2 0 1 1 0
+          0 0 1 0 1 2 0
+          0 1 1 2 1 0 0
+          2 1 0 0 0 0 2
+          0 0 0 2 0 1 1
+          0 1 0 0 0 0 0
+          2 1 0 0 2 0 2
+      - name: sample-5
+        type: fixed
+        content: |
+          7 3
+          2 0 2 0 1 1 0
+          0 0 1 0 1 0 0
+          0 1 1 1 1 0 0
+          2 1 0 0 0 0 2
+          1 0 0 0 0 1 1
+          0 1 0 0 0 0 0
+          2 1 0 0 2 0 2
+      - name: sample-6
+        type: fixed
+        content: |
+          7 2
+          2 0 2 0 1 1 0
+          0 0 1 0 1 0 0
+          0 1 1 1 1 0 0
+          2 1 0 0 0 0 2
+          1 0 0 0 0 1 1
+          0 1 0 0 0 0 0
+          2 1 0 0 2 0 2
+      - name: sample-7
+        type: fixed
+        content: |
+          5 1
+          2 2 2 1 1
+          2 1 1 1 1
+          2 1 1 1 1
+          2 1 1 1 1
+          2 2 2 1 1
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 10
+          item:
+            name: "hidden-random-${i}"
+            type: generator
+            seed: "${i}"
+            args:
+              mode: "random"
+      - matrix:
+          vars:
+            i:
+              range:
+                from: 1
+                to: 10
+          item:
+            name: "hidden-random-v2-${i}"
+            type: generator
+            seed: "${i}"
+            args:
+              mode: "random_v2"

@@ -1,0 +1,55 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          5 17
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            N:
+              range:
+                from: 0
+                to: 100000
+                step: 20000
+            K:
+              range:
+                from: 0
+                to: 100000
+                step: 20000
+          item:
+            name: "hidden-${N}-${K}"
+            type: generator
+            seed: "${(N * 123 + K)}"
+            args:
+              minN: 0
+              maxN: "${N}"
+              minK: 0
+              maxK: "${K}"
+      - matrix:
+          vars:
+            N:
+              range:
+                from: 50000
+                to: 50010
+                step: 3
+            K:
+              range:
+                from: 95000
+                to: 100000
+                step: 125
+          item:
+            name: "hidden-edgecase-${N}-${K}"
+            type: generator
+            seed: "${(N * 123 + K)}"
+            args:
+              minN: 50000
+              maxN: "${N}"
+              minK: 95000
+              maxK: "${K}"
+      - name: hidden-edgecase1
+        type: fixed
+        content: |
+          50001 100000

@@ -62,6 +62,38 @@ PROJECT_ROOT=..
 
 `JUDGE_SOURCE_ROOT`는 공통 judge 저장소 위치입니다. `algorithm-local-judge`와 `algorithm-package`를 같은 부모 디렉터리에 둘 경우 자동으로 `../../algorithm-local-judge`를 사용합니다. `testlib.h`는 공통 judge 저장소의 파일을 include하도록 Makefile에서 `-I$(JUDGE_SOURCE_ROOT)`를 설정합니다.
 
+CLion처럼 `problems` 디렉터리만 열어 작업하는 경우에는 아래 명령으로 공통 `testlib.h`를 `problems/testlib.h` 심볼릭 링크로 노출할 수 있습니다.
+
+```bash
+make testlib-link
+```
+
+## 솔루션 기대 결과 검증
+
+정답 데이터는 항상 `solutions/main_solution.ac.cpp`를 기준으로 생성합니다. `problem.json`의 `tools.solution`도 이 파일을 가리켜야 합니다.
+
+`solutions/` 아래의 C++/Python/Java 솔루션은 파일명에 기대 결과 토큰을 넣습니다.
+
+```text
+main_solution.ac.cpp
+wrong_solution.wa.cpp
+slow_solution.tle.py
+memory_solution.mle.java
+```
+
+지원 토큰:
+
+- `ac`: accepted
+- `wa`: wrong answer
+- `tle`: time limit
+- `mle`: memory limit
+
+`make build-pack`은 pack을 만들기 전에 `VERIFY_PROFILE`의 데이터를 생성하고, `solutions/*.{ac,wa,tle,mle}.{cpp,py,java}` 전체를 실제 채점합니다. 기본 검증 profile은 `hidden`입니다. 기대 결과와 실제 결과가 다르면 pack 빌드는 중단됩니다.
+
+```bash
+make build-pack PROBLEM=01 PACK_ID=basic VERIFY_PROFILE=hidden
+```
+
 ## 테스트 데이터 생성
 
 `generator/generator.cpp`는 `testlib.h` 기반의 단일 입력 생성 도구입니다. 여러 케이스 구성은 문제별 `generator/cases.yml`에 선언하고, 공용 `commons/generate.py`가 YAML을 읽어 생성합니다.

@@ -16,5 +16,6 @@
     "generationTimeoutMs": 5000,
     "solutionTimeoutMs": 2000,
     "userTimeoutMs": 2000
-  }
+  },
+  "folder": "book"
 }

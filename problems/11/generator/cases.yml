@@ -1,0 +1,55 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          2
+      - name: sample-2
+        type: fixed
+        content: |
+          8
+      - name: sample-3
+        type: fixed
+        content: |
+          12
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            N:
+              range:
+                from: 1
+                to: 1000
+                step: 89
+          item:
+            name: "hidden-random-fix-${N}"
+            type: generator
+            seed: "${N}"
+            args:
+              minN: "${N}"
+              maxN: "${N}"
+      - matrix:
+          vars:
+            N:
+              range:
+                from: 60
+                to: 1000
+                step: 59
+          item:
+            name: "hidden-random-fix-${N}"
+            type: generator
+            seed: "${N}"
+            args:
+              minN: "${N}"
+              maxN: "${N}"
+      - matrix:
+          vars:
+            N:
+              range:
+                from: 1
+                to: 5
+          item:
+            name: "hidden-random-${N}"
+            type: generator
+            seed: "${N}"

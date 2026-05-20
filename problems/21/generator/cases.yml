@@ -1,0 +1,41 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          5 3
+          1
+          2
+          8
+          4
+          9
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 5
+          item:
+            name: "hidden-random-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              mode: "random"
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 10000
+                to: 110000
+                step: 10000
+          item:
+            name: "hidden-random-short-interval-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              minV: "${n}"
+              maxV: "${(n * 2)}"
+              mode: "random"

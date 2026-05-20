@@ -1,0 +1,22 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          8 3
+          5 4 2 6 9 3 8 7
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 10
+          item:
+            name: "hidden-random-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              mode: "random"

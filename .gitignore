@@ -3,6 +3,7 @@ build/
 dist/
 .judge-cache/
 .uv-cache/
+testlib.h
 __pycache__/
 *.pyc
 *.egg-info/

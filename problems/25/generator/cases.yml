@@ -1,0 +1,53 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          6
+          -45 22 42 -16
+          -41 -27 56 30
+          -36 53 -37 77
+          -36 30 -75 -46
+          26 -38 -10 62
+          -32 -54 -6 45
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 10
+          item:
+            name: "hidden-random-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              mode: "random"
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 5
+          item:
+            name: "hidden-random-exist-zero-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              mode: "random_exist_zero"
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 5
+          item:
+            name: "hidden-random-exist-zero-large-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              minN: 3000
+              maxN: 4000
+              mode: "random_exist_zero"

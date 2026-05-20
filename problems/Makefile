@@ -17,6 +17,7 @@ PYTHON ?= UV_CACHE_DIR=$(UV_CACHE_DIR) $(UV) run python
 PROBLEMS := $(sort $(patsubst %/problem.json,%,$(wildcard */problem.json)))
 PROBLEM ?= $(firstword $(PROBLEMS))
 PROFILE ?= sample
+VERIFY_PROFILE ?= hidden
 USER_SRC ?= $(PROBLEM)/solutions/main_solution.ac.cpp
 USER_SRC_PATH := $(if $(filter /%,$(USER_SRC)),$(USER_SRC),$(CURDIR)/$(USER_SRC))
 PACK_ID ?= basic
@@ -25,7 +26,7 @@ PLATFORM ?=
 BUILD_DIR ?= $(PROJECT_ROOT_ABS)/build/tools
 
 JUDGE := cd $(JUDGE_SOURCE_ROOT_ABS) && ALJ_PROJECT_ROOT=$(PROJECT_ROOT_ABS) $(PYTHON) -m judge
-CXXFLAGS ?= -std=c++17 -O2 -pipe -I$(JUDGE_SOURCE_ROOT_ABS)
+CXXFLAGS ?= -std=c++17 -O2 -pipe -I$(CURDIR) -I$(JUDGE_SOURCE_ROOT_ABS)
 
 ALL_TOOL_TARGETS := $(foreach P,$(PROBLEMS),$(BUILD_DIR)/$(P)/generator $(BUILD_DIR)/$(P)/validator $(BUILD_DIR)/$(P)/checker $(BUILD_DIR)/$(P)/solution)
 PROBLEM_TOOL_TARGETS := $(if $(PROBLEM),$(BUILD_DIR)/$(PROBLEM)/generator $(BUILD_DIR)/$(PROBLEM)/validator $(BUILD_DIR)/$(PROBLEM)/checker $(BUILD_DIR)/$(PROBLEM)/solution)
@@ -33,11 +34,12 @@ PROBLEM_TOOL_TARGETS := $(if $(PROBLEM),$(BUILD_DIR)/$(PROBLEM)/generator $(BUIL
 .DEFAULT_GOAL := help
 .PRECIOUS: $(BUILD_DIR)/%/.dir
 
-.PHONY: help all require-problem tools problem-tools compile cases-compile generate run smoke list-problems validate-problems build-pack pack-verify clean
+.PHONY: help all require-problem testlib-check testlib-link tools problem-tools compile cases-compile generate run smoke list-problems validate-problems build-pack pack-verify clean
 
 help:
 	@echo "Problem targets:"
 	@echo "  make tools                       Build tools for every discovered problem"
+	@echo "  make testlib-link                Expose common testlib.h in this problems tree"
 	@echo "  make problem-tools               Build tools for PROBLEM"
 	@echo "  make compile                     Alias for problem-tools"
 	@echo "  make cases-compile               Validate cases.yml for PROBLEM/PROFILE"
@@ -46,7 +48,7 @@ help:
 	@echo "  make smoke                       Build tools, generate, run, and validate numbering"
 	@echo "  make list-problems               List discovered problems"
 	@echo "  make validate-problems           Check numbering starts at 1 and is contiguous"
-	@echo "  make build-pack                  Build source-free problem pack"
+	@echo "  make build-pack                  Verify solutions and build source-free problem pack"
 	@echo "  make pack-verify PACK=path       Verify a problem pack"
 	@echo "  make clean                       Remove problem tool build outputs"
 	@echo ""
@@ -54,6 +56,7 @@ help:
 	@echo "  PROBLEMS=$(PROBLEMS)"
 	@echo "  PROBLEM=$(PROBLEM)"
 	@echo "  PROFILE=$(PROFILE)"
+	@echo "  VERIFY_PROFILE=$(VERIFY_PROFILE)"
 	@echo "  USER_SRC=$(USER_SRC)"
 	@echo "  USER_SRC_PATH=$(USER_SRC_PATH)"
 	@echo "  PACK_ID=$(PACK_ID)"
@@ -66,7 +69,7 @@ help:
 	@echo "  make run PROBLEM=06 USER_SRC=path/to/main.cpp"
 	@echo "  make build-pack PROBLEM=06 PACK_ID=basic PLATFORM=macos-arm64"
 
-all: tools
+all: testlib-link tools
 
 require-problem:
 	@if [ -z "$(PROBLEM)" ]; then \
@@ -74,9 +77,25 @@ require-problem:
 		exit 1; \
 	fi
 
-tools: $(ALL_TOOL_TARGETS)
+testlib-check:
+	@test -f "$(JUDGE_SOURCE_ROOT_ABS)/testlib.h" || { \
+		echo "testlib.h not found under JUDGE_SOURCE_ROOT=$(JUDGE_SOURCE_ROOT_ABS)"; \
+		exit 1; \
+	}
 
-problem-tools: require-problem $(PROBLEM_TOOL_TARGETS)
+testlib-link: testlib-check
+	@if [ -L testlib.h ]; then \
+		rm testlib.h; \
+	elif [ -e testlib.h ]; then \
+		echo "problems/testlib.h exists and is not a symlink. Move it before linking."; \
+		exit 1; \
+	fi; \
+	ln -s "$(JUDGE_SOURCE_ROOT_ABS)/testlib.h" testlib.h; \
+	echo "Linked problems/testlib.h -> $(JUDGE_SOURCE_ROOT_ABS)/testlib.h"
+
+tools: testlib-link $(ALL_TOOL_TARGETS)
+
+problem-tools: require-problem testlib-link $(PROBLEM_TOOL_TARGETS)
 
 compile: problem-tools
 
@@ -114,7 +133,7 @@ validate-problems:
 	$(JUDGE) list --validate
 
 build-pack: require-problem problem-tools
-	$(JUDGE) pack build $(CURDIR)/$(PROBLEM) --pack-id $(PACK_ID) --out $(PACK_OUT) $(if $(PLATFORM),--platform $(PLATFORM),)
+	$(JUDGE) pack build $(CURDIR)/$(PROBLEM) --pack-id $(PACK_ID) --out $(PACK_OUT) --verify-profile $(VERIFY_PROFILE) $(if $(PLATFORM),--platform $(PLATFORM),)
 
 pack-verify:
 	$(JUDGE) pack verify $(PACK)
