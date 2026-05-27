@@ -20,6 +20,6 @@ int main(int argc, char* argv[]) {
         else inf.readSpace();
     }
     inf.readEof();
-
+    
     return 0;
 }

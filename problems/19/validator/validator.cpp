@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
 
     int N = inf.readInt(2, 18);
     inf.readEoln();
-
+    
     for(int i = 0; i < N; ++i) {
         for(int j = 0; j < N; ++j) {
             int x = inf.readInt(0, 1);
@@ -16,6 +16,6 @@ int main(int argc, char* argv[]) {
         inf.readEoln();
     }
     inf.readEof();
-
+    
     return 0;
 }

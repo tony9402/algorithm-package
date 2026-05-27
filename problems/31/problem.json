@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "problemId": "31",
+  "title": "줄 세우기",
+  "folder": "book",
+  "version": 1,
+  "tools": {
+    "generator": "generator/generator.cpp",
+    "generatorConfig": "generator/cases.yml",
+    "validator": "validator/validator.cpp",
+    "checker": "checker/judge.cpp",
+    "solution": "solutions/main_solution.ac.cpp"
+  },
+  "defaultProfile": "full",
+  "limits": {
+    "compileTimeoutMs": 5000,
+    "generationTimeoutMs": 5000,
+    "solutionTimeoutMs": 2000,
+    "userTimeoutMs": 2000
+  }
+}

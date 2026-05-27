@@ -1,0 +1,40 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          8
+          11110000
+          11110000
+          00011100
+          00011100
+          11110000
+          11110000
+          11110011
+          11110011
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            exp: [0, 1, 2, 4, 6]
+            mode: ["random", "blocky"]
+          item:
+            name: "hidden-${mode}-${exp}"
+            type: generator
+            seed: "${33000 + exp}"
+            args:
+              exp: "${exp}"
+              mode: "${mode}"
+      - name: hidden-all-zero
+        type: generator
+        seed: 33998
+        args:
+          exp: 6
+          mode: "zero"
+      - name: hidden-all-one
+        type: generator
+        seed: 33999
+        args:
+          exp: 6
+          mode: "one"

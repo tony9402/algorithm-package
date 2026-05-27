@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
-
+    
     int N; cin >> N;
     vector<pair<int, int>> time_table;
     for(int i = 0; i < N; ++i) {
@@ -16,7 +16,7 @@ int main() {
         time_table.emplace_back(r, l);
     }
     sort(time_table.begin(), time_table.end());
-
+    
     int current_time = 0, ans = 0;
     for(int i = 0; i < N; ++i) {
         const auto &[r, l] = time_table[i];
@@ -26,6 +26,6 @@ int main() {
         }
     }
     cout << ans;
-
+    
     return 0;
 }

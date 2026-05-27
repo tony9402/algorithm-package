@@ -5,15 +5,15 @@ using namespace std;
 int main(int argc, char *argv[]) {
     setName("compare ordered sequences of signed int%d numbers", 8 * int(sizeof(long long)));
     registerTestlibCmd(argc, argv);
-
+    
     int N = inf.readInt();
     int M = inf.readInt();
     vector<int> balls(N);
     for(int i = 0; i < N; ++i) balls[i] = inf.readInt();
-
+    
     int n = 0;
     string firstElems;
-
+    
     vector<int> user_output(M);
 
     long long first_answer = -1;
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     if (extraInOufCount > 0)
         quitf(_wa, "Output contains longer sequence [length = %d], but answer contains %d elements",
               n + extraInOufCount, n);
-
+    
     /*
     스페셜 저지
     */
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     for(int i = 1; i <= N; ++i) psum[i] = psum[i - 1] + balls[i - 1];
     if(total_cnt_by_user != N) quitf(_wa, "The total number is not correct (User Solution)");
     if(total_cnt_by_main_solution != N) quitf(_wa, "The total number is not correct (MCS)");
-
+    
     int pre = 0;
     long long mx = 0;
     for(int i = 0; i < M; ++i) {

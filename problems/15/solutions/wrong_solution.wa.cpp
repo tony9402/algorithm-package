@@ -7,7 +7,7 @@ using namespace std;
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
-
+    
     int N, M; cin >> N >> M;
     vector<vector<int>> DP(N + 1, vector<int>(M + 1));
     int width = 0;
@@ -21,6 +21,6 @@ int main() {
         }
     }
     cout << width * width;
-
+    
     return 0;
 }

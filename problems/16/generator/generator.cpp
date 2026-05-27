@@ -19,15 +19,15 @@ void random_generate(int N) {
 
 int main(int argc, char* argv[]) {
     registerGen(argc, argv, 1);
-
+    
     int minN = opt<int>("minN", 1);
     int maxN = opt<int>("maxN", 100000);
     string mode = opt<string>("mode", "random");
-
+    
     if(mode == "random") {
         int N = rnd.next(minN, maxN);
         random_generate(N);
     }
-
+    
     return 0;
 }

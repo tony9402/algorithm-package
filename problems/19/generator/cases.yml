@@ -27,13 +27,13 @@ profiles:
     cases:
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 5
+            n: [2, 3, 5, 10, 18]
+            mode: ["random", "sparse", "checkerboard", "all_on"]
           item:
-            name: "hidden-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${19000 + n}"
             args:
-              n: "${n}"
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"

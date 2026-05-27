@@ -16,7 +16,7 @@ void random_generate(int N, int M) {
     vector<int> idx(N * N);
     iota(idx.begin(), idx.end(), 0);
     shuffle(idx.begin(), idx.end());
-
+    
     int K = rnd.next(0, N * N - M);
     for(int i = 0; i < K; ++i) {
         int y = idx[i] / N;
@@ -67,7 +67,7 @@ void random_generate_version_2(int N, int M) {
         siz[idx[i]] = 1;
         start_points.emplace_back(y, x);
     }
-
+    
     priority_queue<tuple<int, int, int>> pq;
     for(const auto &[y, x]: start_points) {
         int weight = rnd.next(1, 100000);
@@ -85,7 +85,7 @@ void random_generate_version_2(int N, int M) {
             pq.emplace(weight, qy, qx);
         }
     }
-
+    
     cout << N << " " << M << '\n';
     for(int i = 0; i < N; ++i) {
         for(int j = 0; j < N; ++j) {
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
     int minM = opt<int>("minM", 1);
     int maxM = opt<int>("maxM", 10);
     string mode = opt<string>("mode", "random");
-
+    
     if(mode == "random") {
         int N = rnd.next(minN, maxN);
         int M = rnd.next(minM, maxM);

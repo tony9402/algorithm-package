@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     inf.readEoln();
 
     vector<tuple<int, int, int>> heaters;
-
+    
     int check5 = 0;
     for(int i = 1; i <= R; ++i) {
         for(int j = 1; j <= C; ++j) {

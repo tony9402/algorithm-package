@@ -3,6 +3,8 @@ CXX ?= g++
 
 ifneq ($(wildcard ../testlib.h),)
 JUDGE_SOURCE_ROOT ?= ..
+else ifneq ($(wildcard ../../../testlib.h),)
+JUDGE_SOURCE_ROOT ?= ../../..
 else ifneq ($(wildcard ../../algorithm-local-judge/testlib.h),)
 JUDGE_SOURCE_ROOT ?= ../../algorithm-local-judge
 else

@@ -14,7 +14,7 @@ int main() {
     for(int i = 1; i <= N; ++i) cin >> V[i];
     vector<int> DP(N + 1, -1);
     DP[0] = 0;
-
+    
     function<int(int)> go = [&](int x) -> int {
         if(x < 0) return 0;
         int &ret = DP[x];
@@ -22,7 +22,7 @@ int main() {
         ret = max(V[x - 1] + go(x - 3), go(x - 2)) + V[x];
         return ret;
     };
-
+    
     cout << go(N);
     return 0;
 }

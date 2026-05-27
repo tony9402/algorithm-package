@@ -4,90 +4,51 @@ profiles:
       - name: sample-1
         type: fixed
         content: |
-          441323200312060636
           1
-          441323
+          1
+          U+
       - name: sample-2
         type: fixed
         content: |
-          62012319240507058X
+          2
+          4
+          U+ U+ U+ U+
+          6
+          F+ R+ U- B- L+ D-
+      - name: sample-3
+        type: fixed
+        content: |
+          4
           1
-          620123
+          L-
+          2
+          F+ B+
+          4
+          U- D- L+ R+
+          10
+          L- U- L+ U- L- U- U- L+ U+ U+
   hidden:
     cases:
-      # Random Generator
       - matrix:
           vars:
-            i:
-              range:
-                from: 1
-                to: 50
-                step: 7
+            n: [1, 2, 10, 100]
+            mode: ["random", "same_face", "inverse_pairs"]
           item:
-            name: "hidden-random-${i:02d}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: 1
+            seed: "${4000 + n}"
             args:
-              minN: 1
-              maxN: "${i}"
-              mode: "random"
-      - matrix:
-          vars:
-            i:
-              range:
-                from: 1
-                to: 5
-          item:
-            name: "hidden-male-${i:02d}"
-            type: generator
-            seed: 1
-            args:
-              minN: 1
-              maxN: 50
-              mode: "no_random"
-              male: 1
-      - matrix:
-          vars:
-            i:
-              range:
-                from: 1
-                to: 5
-          item:
-            name: "hidden-female-${i:02d}"
-            type: generator
-            seed: 1
-            args:
-              minN: 1
-              maxN: 50
-              mode: "no_random"
-              male: 0
-      - matrix:
-          vars:
-            i:
-              range:
-                from: 1
-                to: 3
-          item:
-            name: "hidden-edgecase1-male-${i:02d}"
-            type: generator
-            seed: 1
-            args:
-              minN: 1
-              maxN: 50
-              mode: "edgecase1"
-              male: 0
-      - matrix:
-          vars:
-            i:
-              range:
-                from: 1
-                to: 3
-          item:
-            name: "hidden-edgecase1-female-${i:02d}"
-            type: generator
-            seed: 1
-            args:
-              minN: 1
-              maxN: 50
-              mode: "edgecase1"
-              male: 1
+              minT: 1
+              maxT: 5
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"
+      - name: hidden-long-random
+        type: generator
+        seed: 4999
+        args:
+          minT: 20
+          maxT: 20
+          minN: 1000
+          maxN: 1000
+          mode: "random"

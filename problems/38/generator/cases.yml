@@ -1,0 +1,39 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          3 4
+          1 2 4
+          1 3 3
+          2 3 -1
+          3 1 -2
+      - name: sample-2
+        type: fixed
+        content: |
+          3 4
+          1 2 4
+          1 3 3
+          2 3 -4
+          3 1 -2
+      - name: sample-3
+        type: fixed
+        content: |
+          3 2
+          1 2 4
+          1 2 3
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n: [2, 10, 100, 500]
+            mode: ["dag", "negative_cycle", "unreachable"]
+          item:
+            name: "hidden-${mode}-${n}"
+            type: generator
+            seed: "${38000 + n}"
+            args:
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"

@@ -22,15 +22,15 @@ void Print(const vector<vector<int>> &V) {
 
 void random_generate(int N) {
     vector<vector<int>> V(N + 1, vector<int>(N + 1));
-
+    
     for(int i = 1; i <= N; ++i) {
         for(int j = 1; j <= N; ++j) {
             V[i][j] = rnd.next(0, 1);
         }
     }
-
+    
     V[1][1] = V[1][2] = 0;
-
+    
     Print(V);
 }
 
@@ -51,11 +51,11 @@ void connect_random_generate(int N) {
     function<int(int, int)> pos = [&](int y, int x) -> int {
         return y * (N + 1) + x;
     };
-
+    
     V[1][1] = V[1][2] = V[N][N] = 0;
     priority_queue<tuple<int, int, int>> pq;
     vector<vector<int>> visited(N + 1, vector<int>(N + 1));
-    pq.emplace(rnd.next(0, 100000), 1, 1);
+    pq.emplace(rnd.next(0, 100000), 1, 1); 
     visited[1][1] = 1;
     pq.emplace(rnd.next(0, 100000), N, N);
     visited[N][N] = 1;
@@ -72,7 +72,7 @@ void connect_random_generate(int N) {
             merge(pos(y, x), pos(qy, qx));
         }
     }
-
+    
     Print(V);
 }
 
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
     int maxN = opt<int>("maxN", 32);
     string mode = opt<string>("mode", "random");
 
-    int N = rnd.next(minN, maxN);
+    int N = rnd.next(minN, maxN);    
     if(mode == "random") {
         random_generate(N);
     }
@@ -97,6 +97,6 @@ int main(int argc, char* argv[]) {
     else if(mode == "large_answer") {
         large_answer_generate(maxN);
     }
-
+    
     return 0;
 }

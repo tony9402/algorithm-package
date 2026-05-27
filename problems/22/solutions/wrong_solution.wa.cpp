@@ -50,7 +50,7 @@ int main()
 	possible(Parametric_Search(l-1,r),1);
 	for (auto &i : answer)
 		cout << i << ' ';
-
+    
     cout << 0;
 	return 0;
 }

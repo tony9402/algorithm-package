@@ -20,7 +20,7 @@ void random_generate(int N, int d, int k) {
 
 int main(int argc, char* argv[]) {
     registerGen(argc, argv, 1);
-
+    
     int minN = opt<int>("minN", 2);
     int maxN = opt<int>("maxN", 3'000'000);
     int minD = opt<int>("minD", 2);
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     int minK = opt<int>("minK", 2);
     int maxK = opt<int>("maxK", 3'000);
     string mode = opt<string>("mode", "random");
-
+    
     int N = rnd.next(minN, maxN);
     int D = rnd.next(minD, maxD);
     int K = rnd.next(minK, maxK);

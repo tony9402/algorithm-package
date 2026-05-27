@@ -49,7 +49,7 @@ int main() {
             for(int k = 0; k < 8; ++k) {
                 int y = i + dy[k], x = j + dx[k];
                 if(!is_in_range(y, x)) continue;
-                if(current_min > V[y][x]) current_min = V[y][x], target = k;
+                if(current_min > V[y][x]) current_min = V[y][x], target = k; 
             }
             if(target != -1) merge(i * C + j, (i + dy[target]) * C + (j + dx[target]));
         }

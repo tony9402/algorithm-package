@@ -26,13 +26,13 @@ int main(int argc, char* argv[]) {
     int minV = opt<int>("minV", 0);
     int maxV = opt<int>("maxV", 1'000'000'000);
     string mode = opt<string>("mode", "random");
-
+    
     int N = rnd.next(minN, maxN);
     N = min(N, maxV - minV + 1);
     int C = rnd.next(2, N);
     if(mode == "random") {
         random_generate(N, C, minV, maxV);
     }
-
+    
     return 0;
 }

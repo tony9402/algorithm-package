@@ -35,6 +35,6 @@ int main(){
         l++; r = (r + 1) % n;
     }
     cout << ans;
-
+    
     return 0;
 }

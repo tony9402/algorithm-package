@@ -26,11 +26,11 @@ void random_generate(int N) {
 
 int main(int argc, char* argv[]) {
     registerGen(argc, argv, 1);
-
+    
     int minN = opt<int>("minN", 0);
     int maxN = opt<int>("maxN", 10000);
     string mode = opt<string>("mode", "random");
-
+    
     int N = rnd.next(minN, maxN);
     if(mode == "random") {
         random_generate(N);

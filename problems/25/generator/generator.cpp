@@ -21,7 +21,7 @@ void Print(
 }
 
 /*
- * sum_zero가 true면 합이 0인 4개 쌍을 생성
+ * sum_zero가 true면 합이 0인 4개 쌍을 생성 
  */
 tuple<int, int, int, int> generate_quad(bool sum_zero) {
     int a, b, c, d;
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
     int minN = opt<int>("minN", 1);
     int maxN = opt<int>("maxN", 4000);
     string mode = opt<string>("mode", "random");
-
+    
     int N = rnd.next(minN, maxN);
     if(mode == "random") {
         random_generate(N);
@@ -90,6 +90,6 @@ int main(int argc, char* argv[]) {
     else if(mode == "random_exist_zero") {
         random_exist_zero_generate(N);
     }
-
+    
     return 0;
 }

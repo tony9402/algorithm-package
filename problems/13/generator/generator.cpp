@@ -11,7 +11,7 @@ void random_generate(int R, int C) {
     vector<int> values(MAX + 1);
     iota(values.begin(), values.end(), 0);
     shuffle(values.begin(), values.end());
-
+    
     cout << R << ' ' << C << '\n';
     for(int i = 0; i < R; ++i) {
         for(int j = 0; j < C; ++j) {
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     int minC = opt<int>("minC", 1);
     int maxC = opt<int>("maxC", 500);
     string mode = opt<string>("mode", "random");
-
+    
     if(mode == "random") {
         int R = rnd.next(minR, maxR);
         int C = rnd.next(minC, maxC);

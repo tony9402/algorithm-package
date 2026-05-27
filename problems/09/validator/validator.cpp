@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[]) {
     registerValidation(argc, argv);
-
+    
     int N = inf.readInt(4, 50); inf.readSpace();
     int M = inf.readInt(1, 10);
     inf.readEoln();

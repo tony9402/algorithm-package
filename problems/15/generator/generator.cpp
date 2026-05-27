@@ -16,18 +16,18 @@ void random_generate(int N, int M) {
 
 int main(int argc, char* argv[]) {
     registerGen(argc, argv, 1);
-
+    
     int minN = opt<int>("minN", 1);
     int maxN = opt<int>("maxN", 1000);
     int minM = opt<int>("minM", 1);
     int maxM = opt<int>("maxM", 1000);
     string mode = opt<string>("mode", "random");
-
+    
     if(mode == "random") {
         int N = rnd.next(minN, maxN);
         int M = rnd.next(minM, maxM);
         random_generate(N, M);
     }
-
+    
     return 0;
 }

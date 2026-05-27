@@ -1,0 +1,57 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          6
+          5 2 3 4 1 2
+          2 2 4
+          4 1 3 6 5
+          2 4 2
+          2 1 3
+          1 2
+          1 2
+      - name: sample-2
+        type: fixed
+        content: |
+          6
+          1 1 1 1 1 1
+          2 2 4
+          4 1 3 6 5
+          2 4 2
+          2 1 3
+          1 2
+          1 2
+      - name: sample-3
+        type: fixed
+        content: |
+          6
+          10 20 10 20 30 40
+          0
+          0
+          0
+          0
+          0
+          0
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n: [2, 3, 5, 8, 10]
+            mode: ["connected", "random", "disconnected"]
+          item:
+            name: "hidden-${mode}-${n}"
+            type: generator
+            seed: "${28000 + n * 10}"
+            args:
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"
+      - name: hidden-no-solution
+        type: generator
+        seed: 28999
+        args:
+          minN: 7
+          maxN: 10
+          mode: "isolated"

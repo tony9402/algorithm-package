@@ -7,12 +7,12 @@ using namespace std;
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
-
+    
     int N, C; cin >> N >> C;
     vector<int> V(N);
     for(int i = 0; i < N; ++i) cin >> V[i];
     sort(V.begin(), V.end());
-
+    
     int lo = 1, hi = 1'000'000'000;
     while(lo <= hi) {
         int mid = (lo + hi) / 2;
@@ -24,6 +24,6 @@ int main() {
         else hi = mid - 1;
     }
     cout << hi;
-
+    
     return 0;
 }

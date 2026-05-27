@@ -33,7 +33,7 @@ void random_generate(int N, int M, int min_value = MIN, int max_value = MAX) {
 
 int main(int argc, char* argv[]) {
     registerGen(argc, argv, 1);
-
+    
     int minN = opt<int>("minN", 1);
     int maxN = opt<int>("maxN", 100000);
     int minM = opt<int>("minM", 1);
@@ -47,6 +47,6 @@ int main(int argc, char* argv[]) {
     if(mode == "random") {
         random_generate(N, M, minV, maxV);
     }
-
+    
     return 0;
 }

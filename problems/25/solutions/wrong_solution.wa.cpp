@@ -31,7 +31,7 @@ int main(){
 
     sort(all(l));
     sort(all(r));
-
+    
     unsigned int ans = 0;
     for(auto i : l){
         auto up = upper_bound(all(r), -i);

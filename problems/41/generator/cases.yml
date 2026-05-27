@@ -1,0 +1,47 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          5
+          baekjoon
+          startlink
+          bakejoon
+          beakjoon
+          baekjoon
+      - name: sample-2
+        type: fixed
+        content: |
+          7
+          codeplus
+          startlink
+          beakjoon
+          baek
+          baekjoon
+          baek
+          codingwiki
+      - name: sample-3
+        type: fixed
+        content: |
+          6
+          abcd
+          ab
+          ab
+          a
+          a
+          ab
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n: [1, 10, 1000, 100000]
+            mode: ["random", "duplicates", "prefixes"]
+          item:
+            name: "hidden-${mode}-${n}"
+            type: generator
+            seed: "${41000 + n}"
+            args:
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"

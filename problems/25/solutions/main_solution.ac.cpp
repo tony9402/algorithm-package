@@ -30,7 +30,7 @@ int main(){
     }
 
     sort(all(r));
-
+    
     long long ans = 0;
     for(auto i : l){
         auto up = upper_bound(all(r), -i);

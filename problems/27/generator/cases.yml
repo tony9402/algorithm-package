@@ -1,0 +1,40 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          7
+          A B C
+          B D .
+          C E F
+          E . .
+          F . G
+          D . .
+          G . .
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 10
+          item:
+            name: "hidden-random-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              mode: "random_pq"
+      - matrix:
+          vars:
+            n:
+              range:
+                from: 1
+                to: 10
+          item:
+            name: "hidden-random-pq-${n}"
+            type: generator
+            seed: "${n}"
+            args:
+              mode: "random_pq"

@@ -1,26 +1,21 @@
 #include "testlib.h"
-#include <iostream>
-#include <set>
 
 using namespace std;
 
-int main(int argc, char** argv) {
+int main(int argc, char* argv[]) {
     registerValidation(argc, argv);
 
-    string token = inf.readToken("[0-9]{17}[0-9X]{1}");
+    int t = inf.readInt(1, 100, "T");
     inf.readEoln();
-
-    int N = inf.readInt(1, 50);
-    inf.readEoln();
-
-    set<string> codes;
-    for(int i = 0; i < N; ++i) {
-        string code = inf.readToken("[1-9][0-9]{5}");
-        codes.insert(code);
+    for (int tc = 0; tc < t; ++tc) {
+        int n = inf.readInt(1, 1000, "n");
         inf.readEoln();
+        for (int i = 0; i < n; ++i) {
+            inf.readToken("[UDFBLR][+-]", "move");
+            if (i + 1 == n) inf.readEoln();
+            else inf.readSpace();
+        }
     }
-    ensure((int)codes.size() == N);
     inf.readEof();
-
     return 0;
 }

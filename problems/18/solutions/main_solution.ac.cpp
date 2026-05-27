@@ -19,6 +19,6 @@ int main() {
         mx[d] = max(mx[d], p);
     }
     cout << accumulate(mx.begin(), mx.end(), 0);
-
+    
     return 0;
 }

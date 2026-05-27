@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
     int N = inf.readInt(3, 50); inf.readSpace();
     int M = inf.readInt(3, 50);
     inf.readEoln();
-
+    
     int r = inf.readInt(1, N - 2); inf.readSpace();
     int c = inf.readInt(1, M - 2); inf.readSpace();
     int d = inf.readInt(0, 3);

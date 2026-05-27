@@ -11,13 +11,13 @@ int main() {
     cin.tie(0);
 
     int N, K; cin >> N >> K;
-
+    
     deque<int> dq;
     vector<int> dist(MAX + 1, -1);
 
     dist[N] = 0;
     dq.push_back(N);
-
+    
     while(!dq.empty()) {
         int cur = dq.front(); dq.pop_front();
         if(2 * cur < MAX && dist[2 * cur] == -1) dist[2 * cur] = dist[cur], dq.push_front(2 * cur);

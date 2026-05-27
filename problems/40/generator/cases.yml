@@ -1,0 +1,38 @@
+profiles:
+  sample:
+    cases:
+      - name: sample-1
+        type: fixed
+        content: |
+          5 10
+          baekjoononlinejudge
+          startlink
+          codeplus
+          sundaycoding
+          codingsh
+          baekjoon
+          star
+          start
+          code
+          sunday
+          coding
+          cod
+          online
+          judge
+          plus
+  hidden:
+    cases:
+      - matrix:
+          vars:
+            n: [1, 10, 1000, 10000]
+            mode: ["random", "prefix_heavy"]
+          item:
+            name: "hidden-${mode}-${n}"
+            type: generator
+            seed: "${40000 + n}"
+            args:
+              minN: "${n}"
+              maxN: "${n}"
+              minM: "${n}"
+              maxM: "${n}"
+              mode: "${mode}"

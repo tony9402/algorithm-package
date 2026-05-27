@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "problemId": "04",
-  "title": "큐빙 (WIP)",
+  "title": "큐빙",
   "version": 1,
   "tools": {
     "generator": "generator/generator.cpp",

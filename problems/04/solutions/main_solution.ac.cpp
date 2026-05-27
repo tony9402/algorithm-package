@@ -1,71 +1,106 @@
-#include<iostream>
-#include<set>
+#include <array>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-int days[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-set<string> region;
+struct Sticker {
+    array<int, 3> pos;
+    array<int, 3> normal;
+    char color;
+};
 
-bool is_leap_year(int year) {
-    return year % 400 == 0 || (year % 100 != 0 && year % 4 == 0);
-}
-
-int get_valid_days(int year, int month) {
-    return month == 2 && is_leap_year(year) ? (days[month] + 1) : days[month];
-}
-
-bool valid_region(string code) {
-    return region.find(code) != region.end();
-}
-
-bool valid_birth_code(string code) {
-    int year = stoi(code.substr(0, 4));
-    int month = stoi(code.substr(4, 2));
-    int day = stoi(code.substr(6));
-    if(!(1900 <= year && year <= 2011)) return false;
-    if(!(1 <= month && month <= 12)) return false;
-    if(!(1 <= day && day <= get_valid_days(year, month))) return false;
-    return true;
-}
-
-char order_code(string code) {
-    int code_integer = stoi(code);
-    if(code_integer == 0) return 'I';
-    return code_integer % 2 == 0 ? 'F' : 'M';
-}
-
-bool checksum(string code) {
-    int x = 0;
-    for(char a: code) {
-        x *= 2;
-        if(a == 'X') x += 10;
-        else x += a - '0';
+void rotateVec(array<int, 3>& v, int axis, int quarter) {
+    int x = v[0], y = v[1], z = v[2];
+    if (axis == 0) {
+        if (quarter == 1) v = {x, -z, y};
+        else v = {x, z, -y};
+    } else if (axis == 1) {
+        if (quarter == 1) v = {z, y, -x};
+        else v = {-z, y, x};
+    } else {
+        if (quarter == 1) v = {-y, x, z};
+        else v = {y, -x, z};
     }
-    return x % 11 == 1;
+}
+
+void rotateLayer(vector<Sticker>& cube, char face, char direction) {
+    int axis = 0;
+    int layer = 1;
+    if (face == 'U') axis = 1, layer = 1;
+    if (face == 'D') axis = 1, layer = -1;
+    if (face == 'F') axis = 2, layer = 1;
+    if (face == 'B') axis = 2, layer = -1;
+    if (face == 'R') axis = 0, layer = 1;
+    if (face == 'L') axis = 0, layer = -1;
+
+    int quarter = direction == '+' ? -layer : layer;
+    for (Sticker& sticker : cube) {
+        if (sticker.pos[axis] != layer) continue;
+        rotateVec(sticker.pos, axis, quarter);
+        rotateVec(sticker.normal, axis, quarter);
+    }
+}
+
+vector<Sticker> makeCube() {
+    vector<Sticker> cube;
+    auto addFace = [&](array<int, 3> normal, char color) {
+        int axis = normal[0] ? 0 : normal[1] ? 1 : 2;
+        int layer = normal[axis];
+        for (int a = -1; a <= 1; ++a) {
+            for (int b = -1; b <= 1; ++b) {
+                array<int, 3> pos{};
+                pos[axis] = layer;
+                int idx = 0;
+                for (int i = 0; i < 3; ++i) {
+                    if (i == axis) continue;
+                    pos[i] = idx++ == 0 ? a : b;
+                }
+                cube.push_back({pos, normal, color});
+            }
+        }
+    };
+
+    addFace({0, 1, 0}, 'w');
+    addFace({0, -1, 0}, 'y');
+    addFace({0, 0, 1}, 'r');
+    addFace({0, 0, -1}, 'o');
+    addFace({-1, 0, 0}, 'g');
+    addFace({1, 0, 0}, 'b');
+    return cube;
+}
+
+char upperColor(const vector<Sticker>& cube, int row, int col) {
+    int z = row - 1;
+    int x = col - 1;
+    for (const Sticker& sticker : cube) {
+        if (sticker.normal == array<int, 3>{0, 1, 0} && sticker.pos == array<int, 3>{x, 1, z}) {
+            return sticker.color;
+        }
+    }
+    return '?';
 }
 
 int main() {
-    // 빠른 입출력을 위해 사용됩니다.
     ios::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(nullptr);
 
-    string sn;
-    cin >> sn;
-
-    int N;
-    cin >> N;
-
-    for(int i = 0; i < N; ++i) {
-        string region_str;
-        cin >> region_str;
-        region.insert(region_str);
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<Sticker> cube = makeCube();
+        for (int i = 0; i < n; ++i) {
+            string move;
+            cin >> move;
+            rotateLayer(cube, move[0], move[1]);
+        }
+        for (int row = 0; row < 3; ++row) {
+            for (int col = 0; col < 3; ++col) cout << upperColor(cube, row, col);
+            cout << '\n';
+        }
     }
-
-    bool flag = valid_region(sn.substr(0, 6));
-    flag &= valid_birth_code(sn.substr(6, 8));
-    flag &= checksum(sn);
-
-    cout << (flag ? order_code(sn.substr(14, 3)) : 'I');
-
     return 0;
 }
