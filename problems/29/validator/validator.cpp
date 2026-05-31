@@ -5,7 +5,7 @@
  
 using namespace std;
  
-#define MAXN 100000
+#define MAXN 200000
  
 int main(int argc, char **argv) {
     registerValidation(argc, argv);
