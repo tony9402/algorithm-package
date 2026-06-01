@@ -1,5 +1,6 @@
 #include "testlib.h"
 #include <vector>
+#include <stack>
 #include <functional>
 #include <algorithm>
  
@@ -26,14 +27,27 @@ int main(int argc, char **argv) {
         graph[a].push_back(b);
         graph[b].push_back(a);
     }
-    function<void(int, int, int)> dfs = [&](int cur, int prev, int c) -> void {
+    
+    // validate
+    stack<int> st;
+    vector<int> pre(N + 1);
+    vector<int> dfs_color(N + 1);
+    st.push(1);
+    
+    while(!st.empty()) {
+        int cur = st.top(); st.pop();
+        int prev = pre[cur];
+        int c = dfs_color[cur];
+        
         if(c) ensure(color[cur] != 0);
-        if(color[cur]) c = 1;
-        for(int nxt : graph[cur]) {
+        int flag = dfs_color[cur] | color[cur];
+        for(int nxt: graph[cur]) {
             if(nxt == prev) continue;
-            dfs(nxt, cur, c);
+            pre[nxt] = cur;
+            dfs_color[nxt] |= flag;
+            st.push(nxt);
         }
-    };
-    dfs(1, 0, 0);
+    }
+
     inf.readEof();
 }
