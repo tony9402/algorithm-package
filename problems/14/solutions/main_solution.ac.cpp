@@ -29,7 +29,7 @@ int main(){
             if(down == 0) {
                 DP[i + 1][j][1] += DP[i][j][1] + DP[i][j][2];
             }
-            if(bottom_right == 0) {
+            if(right == 0 && down == 0 && bottom_right == 0) {
                 DP[i + 1][j + 1][2] += DP[i][j][0] + DP[i][j][1] + DP[i][j][2];
             }
         }

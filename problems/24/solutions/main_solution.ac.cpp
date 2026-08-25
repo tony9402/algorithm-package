@@ -20,6 +20,7 @@ int main(){
     }
     if(used[c])ans = cnt;
     else ans = cnt + 1;
+    r %= n;
     while(l < n){
         if(--Count[v[l]] == 0){
             used[v[l]] = false;

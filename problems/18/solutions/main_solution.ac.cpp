@@ -1,24 +1,36 @@
-#include <iostream>
-#include <vector>
-#include <utility>
-#include <numeric>
 #include <algorithm>
+#include <functional>
+#include <iostream>
+#include <queue>
+#include <utility>
+#include <vector>
 
 using namespace std;
 
-const int MAX = 10000;
-
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(nullptr);
 
-    int N; cin >> N;
-    vector<int> mx(MAX + 1);
-    for(int i = 0; i < N; ++i) {
-        int p, d; cin >> p >> d;
-        mx[d] = max(mx[d], p);
+    int n;
+    cin >> n;
+    vector<pair<int, int>> lectures(n);
+    for (auto& [deadline, pay] : lectures) {
+        cin >> pay >> deadline;
     }
-    cout << accumulate(mx.begin(), mx.end(), 0);
-    
-    return 0;
+    sort(lectures.begin(), lectures.end());
+
+    priority_queue<int, vector<int>, greater<int>> selected;
+    for (auto [deadline, pay] : lectures) {
+        selected.push(pay);
+        if (static_cast<int>(selected.size()) > deadline) {
+            selected.pop();
+        }
+    }
+
+    long long answer = 0;
+    while (!selected.empty()) {
+        answer += selected.top();
+        selected.pop();
+    }
+    cout << answer << '\n';
 }
