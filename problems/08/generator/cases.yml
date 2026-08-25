@@ -28,6 +28,7 @@ profiles:
               maxN: "${N}"
               minK: 0
               maxK: "${K}"
+              mode: "random"
       - matrix:
           vars:
             N:
@@ -49,6 +50,7 @@ profiles:
               maxN: "${N}"
               minK: 95000
               maxK: "${K}"
+              mode: "random"
       - name: hidden-edgecase1
         type: fixed
         content: |

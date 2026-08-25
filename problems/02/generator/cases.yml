@@ -36,6 +36,10 @@ profiles:
           item:
             name: "hidden-random-${i:02d}"
             type: generator
-            seed: 1
+            seed: "${2000 + i}"
             args:
+              minN: 3
+              maxN: 50
+              minM: 3
+              maxM: 50
               mode: "random"

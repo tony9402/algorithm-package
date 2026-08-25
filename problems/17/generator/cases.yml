@@ -20,16 +20,17 @@ profiles:
     cases:
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 5
+            n: [1, 2, 5, 10, 1000, 100000]
+            mode: ["random", "touching", "same_end"]
           item:
-            name: "hidden-random-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${17000 + n}"
             args:
-              mode: "random"
+              minN: "${n}"
+              maxN: "${n}"
+              max_time: "${n + 5}"
+              mode: "${mode}"
       - matrix:
           vars:
             max_time:

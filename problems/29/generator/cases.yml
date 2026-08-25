@@ -39,6 +39,8 @@ profiles:
             type: generator
             seed: "${n}"
             args:
+              minN: "${n}"
+              maxN: "${n}"
               mode: "random"
       - matrix:
           vars:
@@ -51,6 +53,8 @@ profiles:
             type: generator
             seed: "${n}"
             args:
+              minN: "${n}"
+              maxN: "${n}"
               mode: "skewed"
       - matrix:
           vars:

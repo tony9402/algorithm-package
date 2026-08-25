@@ -1,111 +1,101 @@
 #include "testlib.h"
-#include <iostream>
-#include <vector>
-#include <stack>
-#include <utility>
 #include <algorithm>
-#include <numeric>
 #include <functional>
+#include <iostream>
+#include <numeric>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
 
 using namespace std;
 
-void Print(
-    int N, 
-    const vector<int> &color,
-    const vector<pair<int, int>> &edges
-) {
-    cout << N << '\n';
-    for(int i = 1; i <= N; ++i) {
-        cout << color[i];
-        if(i == N) cout << '\n';
-        else cout << ' ';
-    }
-    int M = (int)edges.size();
-    for(int i = 0; i < M; ++i) {
-        int u = edges[i].first;
-        int v = edges[i].second;
-        cout << u << ' ' << v << '\n';
-    }
+void print_tree(int n, const vector<int> &color,
+                const vector<pair<int, int>> &edges) {
+  cout << n << '\n';
+  for (int i = 1; i <= n; ++i)
+    cout << color[i] << (i == n ? '\n' : ' ');
+  for (auto [u, v] : edges)
+    cout << u << ' ' << v << '\n';
 }
 
-vector<int> coloring(int N, const vector<pair<int, int>> &edges) {
-    vector<vector<int>> tree(N + 1);
-    int M = (int)edges.size();
-    for(int i = 0; i < M; ++i) {
-        int u = edges[i].first, v = edges[i].second;
-        tree[u].push_back(v);
-        tree[v].push_back(u);
-    }
+vector<int> coloring(int n, const vector<pair<int, int>> &edges) {
+  vector<vector<int>> tree(n + 1);
+  for (auto [u, v] : edges) {
+    tree[u].push_back(v);
+    tree[v].push_back(u);
+  }
 
-    vector<int> color(N + 1);
-    vector<int> pre(N + 1);
-    vector<int> offset(N + 1);
-    stack<int> st;
-    st.push(1);
-    
-    while(!st.empty()) {
-        int cur = st.top(); st.pop();
-        if(rnd.next(0, 1)) color[cur] = rnd.next(offset[cur], N);
-        else color[cur] = color[pre[cur]];
-        for(int nxt: tree[cur]) {
-            if(nxt == pre[cur]) continue;
-            pre[nxt] = cur;
-            offset[nxt] = !!color[cur];
-            st.push(nxt);
-        }
+  vector<int> color(n + 1), parent(n + 1), offset(n + 1);
+  stack<int> st;
+  st.push(1);
+  while (!st.empty()) {
+    int cur = st.top();
+    st.pop();
+    color[cur] = rnd.next(0, 1) ? rnd.next(offset[cur], n) : color[parent[cur]];
+    for (int nxt : tree[cur]) {
+      if (nxt == parent[cur])
+        continue;
+      parent[nxt] = cur;
+      offset[nxt] = !!color[cur];
+      st.push(nxt);
     }
-    return color;
+  }
+  return color;
 }
 
-void random_skewed_generate(int N) {
-    vector<int> nodes(N);
-    iota(nodes.begin(), nodes.end(), 1);
-    shuffle(nodes.begin(), nodes.end());
-    vector<pair<int, int>> edges;
-    for(int i = 0; i + 1 < N; i++) {
-        edges.emplace_back(nodes[i], nodes[i + 1]);
-    }
-
-    vector<int> color = coloring(N, edges);
-    Print(N, color, edges);
+void generate_skewed(int minN, int maxN) {
+  int n = rnd.next(minN, maxN);
+  vector<int> nodes(n);
+  iota(nodes.begin(), nodes.end(), 1);
+  shuffle(nodes.begin(), nodes.end());
+  vector<pair<int, int>> edges;
+  for (int i = 0; i + 1 < n; ++i)
+    edges.emplace_back(nodes[i], nodes[i + 1]);
+  print_tree(n, coloring(n, edges), edges);
 }
 
-void random_generate(int N) {
-    vector<int> uf(N + 1, -1);
-    function<int(int)> find = [&](int x) -> int { 
-        return uf[x] < 0 ? x : uf[x] = find(uf[x]);
-    };
-    function<bool(int, int)> merge = [&](int u, int v) -> bool {
-        u = find(u); v = find(v);
-        if(u == v) return false;
-        uf[v] = u;
-        return true;
-    };
-    vector<pair<int, int>> edges;
-    for(int i = 0; i < N - 1; i++) {
-        int a = rnd.next(1, N);
-        int b = rnd.next(1, N);
-        while(find(a) == find(b)) b = rnd.next(1, N);
-        merge(a, b);
-        edges.emplace_back(a, b);
-    }
+void generate_random(int minN, int maxN) {
+  int n = rnd.next(minN, maxN);
+  vector<int> uf(n + 1, -1);
+  function<int(int)> find = [&](int x) {
+    return uf[x] < 0 ? x : uf[x] = find(uf[x]);
+  };
+  auto merge = [&](int a, int b) {
+    a = find(a);
+    b = find(b);
+    if (a == b)
+      return false;
+    uf[b] = a;
+    return true;
+  };
 
-    vector<int> color = coloring(N, edges);
-    Print(N, color, edges);
+  vector<pair<int, int>> edges;
+  for (int i = 0; i < n - 1; ++i) {
+    int a = rnd.next(1, n);
+    int b = rnd.next(1, n);
+    while (find(a) == find(b))
+      b = rnd.next(1, n);
+    merge(a, b);
+    edges.emplace_back(a, b);
+  }
+  print_tree(n, coloring(n, edges), edges);
 }
 
 int main(int argc, char **argv) {
-    registerGen(argc, argv, 1);
+  registerGen(argc, argv, 1);
 
-    int minN = opt<int>("minN", 1);
-    int maxN = opt<int>("maxN", 200'000);
-    string mode = opt<string>("mode", "random"); //ranodm, skewed
+  int minN = opt<int>("minN", 1);
+  int maxN = opt<int>("maxN", 200000);
+  string mode = opt<string>("mode", "random");
 
-    int N = rnd.next(minN, maxN);
-    if(mode == "random") {
-        random_generate(N);
-    }
-    else if(mode == "skewed") {
-        random_skewed_generate(N);
-    }
+  if (mode == "random")
+    generate_random(minN, maxN);
+  else if (mode == "skewed")
+    generate_skewed(minN, maxN);
+  else {
+    cerr << "unknown mode: " << mode << '\n';
+    return 1;
+  }
+  return 0;
 }

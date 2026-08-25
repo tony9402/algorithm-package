@@ -22,8 +22,10 @@ profiles:
           item:
             name: "hidden-random-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${25000 + n}"
             args:
+              minN: "${n}"
+              maxN: "${n}"
               mode: "random"
       - matrix:
           vars:
@@ -34,8 +36,10 @@ profiles:
           item:
             name: "hidden-random-exist-zero-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${25100 + n}"
             args:
+              minN: "${n}"
+              maxN: "${n}"
               mode: "random_exist_zero"
       - matrix:
           vars:

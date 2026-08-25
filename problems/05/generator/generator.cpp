@@ -1,29 +1,35 @@
 #include "testlib.h"
-#include<iostream>
-#include<algorithm>
+#include <iostream>
+#include <string>
 
 using namespace std;
 
-int main(int argc, char** argv) {
-    registerGen(argc, argv, 1);
+void generate_random(int minN, int maxN, int minM, int maxM, int startV) {
+  int n = rnd.next(minN, maxN);
+  int m = rnd.next(minM, maxM);
+  int v = startV == -1 ? rnd.next(1, n) : startV;
 
-    int min_N = opt<int>("minN");
-    int max_N = opt<int>("maxN");
-    int min_M = opt<int>("minM");
-    int max_M = opt<int>("maxM");
-    int start_V = opt<int>("startV", -1);
+  cout << n << ' ' << m << ' ' << v << '\n';
+  for (int i = 0; i < m; ++i) {
+    cout << rnd.next(1, n) << ' ' << rnd.next(1, n) << '\n';
+  }
+}
 
-    int N = rnd.next(min_N, max_N);
-    int M = rnd.next(min_M, max_M);
-    int V = start_V == -1 ? rnd.next(1, N) : start_V;
+int main(int argc, char **argv) {
+  registerGen(argc, argv, 1);
 
-    cout << N << " " << M << " " << V << '\n';
+  int minN = opt<int>("minN", 1);
+  int maxN = opt<int>("maxN", 1000);
+  int minM = opt<int>("minM", 1);
+  int maxM = opt<int>("maxM", 10000);
+  int startV = opt<int>("startV", -1);
+  string mode = opt<string>("mode", "random");
 
-    for(int i = 0; i < M; ++i) {
-        int u = rnd.next(1, N);
-        int v = rnd.next(1, N);
-        cout << u << ' ' << v << '\n';
-    }
-
-    return 0;
+  if (mode == "random")
+    generate_random(minN, maxN, minM, maxM, startV);
+  else {
+    cerr << "unknown mode: " << mode << '\n';
+    return 1;
+  }
+  return 0;
 }

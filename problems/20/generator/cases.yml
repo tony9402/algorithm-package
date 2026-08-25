@@ -12,13 +12,15 @@ profiles:
     cases:
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 10
+            n: [1, 2, 10, 1000, 100000]
+            mode: ["random", "all_hits", "all_misses"]
           item:
-            name: "hidden-random-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${20000 + n}"
             args:
-              mode: "random"
+              minN: "${n}"
+              maxN: "${n}"
+              minM: "${n}"
+              maxM: "${n}"
+              mode: "${mode}"

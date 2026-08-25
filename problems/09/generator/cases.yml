@@ -78,6 +78,24 @@ profiles:
           2 2 2 1 1
   hidden:
     cases:
+      - name: hidden-inactive-virus-bridge
+        type: fixed
+        content: |
+          5 1
+          0 2 2 2 0
+          1 1 1 1 1
+          1 1 1 1 1
+          1 1 1 1 1
+          1 1 1 1 1
+      - name: hidden-inactive-virus-time
+        type: fixed
+        content: |
+          5 1
+          2 0 2 2 2
+          1 1 1 1 1
+          1 1 1 1 1
+          1 1 1 1 1
+          1 1 1 1 1
       - matrix:
           vars:
             i:

@@ -31,3 +31,4 @@ profiles:
               maxN: "${N}"
               minM: "${M}"
               maxM: "${M}"
+              mode: "random"

@@ -16,25 +16,24 @@ profiles:
     cases:
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 10
+            n: [1, 2, 7, 15, 26]
           item:
             name: "hidden-random-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${27000 + n}"
             args:
-              mode: "random_pq"
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "random"
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 10
+            n: [1, 2, 7, 15, 26]
+            mode: ["random_pq", "left_chain", "right_chain", "balanced"]
           item:
-            name: "hidden-random-pq-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${27100 + n}"
             args:
-              mode: "random_pq"
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"

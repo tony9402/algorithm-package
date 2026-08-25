@@ -15,13 +15,13 @@ profiles:
     cases:
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 10
+            n: [1, 2, 10, 1000, 10000]
+            mode: ["random", "exact", "no_solution"]
           item:
-            name: "hidden-random-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${23000 + n}"
             args:
-              mode: "random"
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"

@@ -19,3 +19,4 @@ profiles:
             seed: "${i}"
             args:
               N: "${i}"
+              mode: "random"

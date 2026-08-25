@@ -14,15 +14,22 @@ profiles:
           50 10
   hidden:
     cases:
+      - name: hidden-deadline-slack
+        type: fixed
+        content: |
+          3
+          100 2
+          99 2
+          1 1
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 5
+            n: [0, 1, 2, 7, 1000, 10000]
+            mode: ["random", "same_deadline", "tight_deadlines"]
           item:
-            name: "hidden-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${18000 + n}"
             args:
-              mode: "random"
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"

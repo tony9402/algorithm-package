@@ -29,6 +29,7 @@ profiles:
             args:
               minN: "${N}"
               maxN: "${N}"
+              mode: "random"
       - matrix:
           vars:
             N:
@@ -43,6 +44,7 @@ profiles:
             args:
               minN: "${N}"
               maxN: "${N}"
+              mode: "random"
       - matrix:
           vars:
             N:
@@ -53,3 +55,7 @@ profiles:
             name: "hidden-random-${N}"
             type: generator
             seed: "${N}"
+            args:
+              minN: "${N}"
+              maxN: "${N}"
+              mode: "random"

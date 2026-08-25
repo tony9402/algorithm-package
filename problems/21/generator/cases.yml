@@ -14,16 +14,16 @@ profiles:
     cases:
       - matrix:
           vars:
-            n:
-              range:
-                from: 1
-                to: 5
+            n: [2, 3, 5, 10, 1000, 200000]
+            mode: ["random", "even", "clustered"]
           item:
-            name: "hidden-random-${n}"
+            name: "hidden-${mode}-${n}"
             type: generator
-            seed: "${n}"
+            seed: "${21000 + n}"
             args:
-              mode: "random"
+              minN: "${n}"
+              maxN: "${n}"
+              mode: "${mode}"
       - matrix:
           vars:
             n:
@@ -36,6 +36,8 @@ profiles:
             type: generator
             seed: "${n}"
             args:
+              minN: "${n}"
+              maxN: "${n}"
               minV: "${n}"
               maxV: "${(n * 2)}"
-              mode: "random"
+              mode: "clustered"

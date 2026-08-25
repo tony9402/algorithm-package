@@ -1,38 +1,83 @@
 #include "testlib.h"
+#include <algorithm>
 #include <iostream>
+#include <set>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-void Print(int C, const vector<int> &V) {
-    int N = (int)V.size();
-    cout << N << ' ' << C << '\n';
-    for(int i = 0; i < N; ++i) cout << V[i] << '\n';
+int choose_n(int minN, int maxN, int minV, int maxV) {
+  int capacity = (int)min<long long>(maxV - 1LL * minV + 1, maxN);
+  minN = min(minN, capacity);
+  return rnd.next(minN, capacity);
 }
 
-void random_generate(int N, int C, int min_value = 0, int max_value = 1'000'000'000) {
-    set<int> st;
-    while(st.size() < N) st.insert(rnd.next(min_value, max_value));
-    vector<int> V(st.begin(), st.end());
-    shuffle(V.begin(), V.end());
-    Print(C, V);
+int choose_c(int minC, int n) {
+  int lower = min(minC, n);
+  return rnd.next(lower, n);
 }
 
-int main(int argc, char* argv[]) {
-    registerGen(argc, argv, 1);
+void print_case(int c, const vector<int> &values) {
+  cout << values.size() << ' ' << c << '\n';
+  for (int value : values)
+    cout << value << '\n';
+}
 
-    int minN = opt<int>("minN", 2);
-    int maxN = opt<int>("maxN", 200000);
-    int minC = opt<int>("minC", 2);
-    int minV = opt<int>("minV", 0);
-    int maxV = opt<int>("maxV", 1'000'000'000);
-    string mode = opt<string>("mode", "random");
-    
-    int N = rnd.next(minN, maxN);
-    N = min(N, maxV - minV + 1);
-    int C = rnd.next(2, N);
-    if(mode == "random") {
-        random_generate(N, C, minV, maxV);
-    }
-    
-    return 0;
+void generate_random(int minN, int maxN, int minC, int minV, int maxV) {
+  int n = choose_n(minN, maxN, minV, maxV);
+  int c = choose_c(minC, n);
+
+  set<int> positions;
+  while ((int)positions.size() < n)
+    positions.insert(rnd.next(minV, maxV));
+  vector<int> values(positions.begin(), positions.end());
+  shuffle(values.begin(), values.end());
+
+  print_case(c, values);
+}
+
+void generate_even(int minN, int maxN, int minC, int minV, int maxV) {
+  int n = choose_n(minN, maxN, minV, maxV);
+  int c = choose_c(minC, n);
+  vector<int> values(n);
+  long long step = max(1LL, (maxV - 1LL * minV) / max(1, n - 1));
+  for (int i = 0; i < n; ++i)
+    values[i] = (int)(minV + step * i);
+  shuffle(values.begin(), values.end());
+  print_case(c, values);
+}
+
+void generate_clustered(int minN, int maxN, int minC, int minV, int maxV) {
+  int n = choose_n(minN, maxN, minV, maxV);
+  int c = choose_c(minC, n);
+  int start = rnd.next(minV, maxV - n + 1);
+  vector<int> values(n);
+  for (int i = 0; i < n; ++i)
+    values[i] = start + i;
+  shuffle(values.begin(), values.end());
+  print_case(c, values);
+}
+
+int main(int argc, char *argv[]) {
+  registerGen(argc, argv, 1);
+
+  int minN = opt<int>("minN", 2);
+  int maxN = opt<int>("maxN", 200000);
+  int minC = opt<int>("minC", 2);
+  int minV = opt<int>("minV", 0);
+  int maxV = opt<int>("maxV", 1000000000);
+  string mode = opt<string>("mode", "random");
+
+  if (mode == "random")
+    generate_random(minN, maxN, minC, minV, maxV);
+  else if (mode == "even")
+    generate_even(minN, maxN, minC, minV, maxV);
+  else if (mode == "clustered")
+    generate_clustered(minN, maxN, minC, minV, maxV);
+  else {
+    cerr << "unknown mode: " << mode << '\n';
+    return 1;
+  }
+  return 0;
 }
