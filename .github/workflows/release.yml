@@ -1,0 +1,149 @@
+name: Signed problem pack release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions: {}
+
+concurrency:
+  group: problem-pack-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'tony9402/algorithm-package'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux-amd64
+          - runner: ubuntu-24.04-arm
+            platform: linux-arm64
+          - runner: macos-15-intel
+            platform: macos-amd64
+          - runner: macos-15
+            platform: macos-arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
+      - name: Check out the matching Judge release
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: tony9402/algorithm-local-judge
+          ref: ${{ github.ref_name }}
+          path: .release-tool
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.11.12"
+          enable-cache: true
+          cache-dependency-glob: .release-tool/uv.lock
+      - name: Install the Judge build environment
+        working-directory: .release-tool
+        run: uv sync --locked --no-dev
+      - name: Expose the shared testlib header
+        shell: bash
+        run: ln -s "${GITHUB_WORKSPACE}/.release-tool/testlib.h" testlib.h
+      - name: Build and verify the native problem pack
+        shell: bash
+        env:
+          ALJ_TOOL_COMPILE_TIMEOUT_MIN_MS: "30000"
+          EXPECTED_PLATFORM: ${{ matrix.platform }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          .release-tool/.venv/bin/python scripts/build_release_pack.py \
+            --release-tag "$RELEASE_TAG" \
+            --expected-platform "$EXPECTED_PLATFORM"
+          archive="dist/release/basic-${RELEASE_TAG#v}-${EXPECTED_PLATFORM}.aljpack"
+          .release-tool/.venv/bin/python -m judge pack verify "$archive"
+          test -s "$archive.sha256"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: problem-pack-${{ matrix.platform }}
+          path: |
+            dist/release/*-${{ matrix.platform }}.aljpack
+            dist/release/*-${{ matrix.platform }}.aljpack.sha256
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.repository == 'tony9402/algorithm-package'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          path: release-assets
+          pattern: problem-pack-*
+          merge-multiple: true
+      - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+      - name: Validate and sign release assets with GitHub OIDC
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          artifacts=(release-assets/*.aljpack)
+          if [[ "${#artifacts[@]}" -ne 4 ]]; then
+            echo "expected four platform packs, found ${#artifacts[@]}" >&2
+            exit 1
+          fi
+          expected_platforms=(linux-amd64 linux-arm64 macos-amd64 macos-arm64)
+          for platform in "${expected_platforms[@]}"; do
+            test -s "release-assets/basic-${RELEASE_TAG#v}-${platform}.aljpack"
+          done
+          (cd release-assets && sha256sum --check *.aljpack.sha256)
+
+          identity="https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@refs/tags/${RELEASE_TAG}"
+          for artifact in "${artifacts[@]}"; do
+            cosign sign-blob "$artifact" --bundle "$artifact.sigstore.json" --yes
+            cosign verify-blob "$artifact" \
+              --bundle "$artifact.sigstore.json" \
+              --certificate-identity "$identity" \
+              --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+          done
+      - name: Publish the immutable GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "immutable release already exists: $RELEASE_TAG" >&2
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" release-assets/* \
+            --verify-tag \
+            --generate-notes \
+            --title "$RELEASE_TAG"
+      - name: Verify published assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          mkdir published-assets
+          gh release download "$RELEASE_TAG" --dir published-assets
+          test "$(find published-assets -maxdepth 1 -name '*.aljpack' | wc -l)" -eq 4
+          test "$(find published-assets -maxdepth 1 -name '*.aljpack.sha256' | wc -l)" -eq 4
+          test "$(find published-assets -maxdepth 1 -name '*.aljpack.sigstore.json' | wc -l)" -eq 4
+          (cd published-assets && sha256sum --check *.aljpack.sha256)

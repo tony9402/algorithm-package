@@ -211,3 +211,20 @@ judge list
 judge generate 01 --profile sample
 judge --problem 01 --profile sample path/to/main.cpp
 ```
+
+## 공식 Problem Pack 배포
+
+`v0.1.0`처럼 Judge 버전과 같은 태그를 push하면 GitHub Actions가 전체 문제를 하나의
+`basic` 팩으로 빌드합니다. Linux/macOS의 amd64·arm64 팩, SHA-256 체크섬, Sigstore
+서명은 GitHub Release에 자동으로 게시됩니다.
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+게시 후에는 별도 파일 지정 없이 바로 설치할 수 있습니다.
+
+```bash
+judge problem install tony9402/algorithm-package
+```
